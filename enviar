@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Enviar arquivo</title>
+</head>
+<body>
+
+	<h1>Enviar arquivo para a pasta "segundo ano"</h1>
+
+	<?php
+	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+		$target_dir = "segundo_ano/";
+		$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+		$uploadOk = 1;
+		$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+		
+		// Verifica se o arquivo já existe
+		if (file_exists($target_file)) {
+		    echo "Desculpe, o arquivo já existe.";
+		    $uploadOk = 0;
+		}
+
+		// Verifica o tamanho máximo do arquivo
+		if ($_FILES["fileToUpload"]["size"] > 5000000) {
+		    echo "Desculpe, seu arquivo é muito grande.";
+		    $uploadOk = 0;
+		}
+
+		// Verifica o tipo de arquivo permitido
+		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+		&& $imageFileType != "gif" && $imageFileType != "pdf") {
+		    echo "Desculpe, apenas arquivos JPG, JPEG, PNG, GIF e PDF são permitidos.";
+		    $uploadOk = 0;
+		}
+
+		// Verifica se o upload foi bem sucedido
+		if ($uploadOk == 0) {
+		    echo "Desculpe, seu arquivo não foi enviado.";
+		} else {
+		    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+		        echo "O arquivo ". basename( $_FILES["fileToUpload"]["name"]). " foi enviado com sucesso.";
+		    } else {
+		        echo "Desculpe, houve um erro ao enviar seu arquivo.";
+		    }
+		}
+	}
+	?>
+
+	<form action="" method="post" enctype="multipart/form-data">
+		Selecione um arquivo para enviar:
+		<input type="file" name="fileToUpload" id="fileToUpload"><br>
+		<input type="submit" value="Enviar arquivo" name="submit">
+	</form>
+
+</body>
+</html>
+
